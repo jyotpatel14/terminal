@@ -1,1477 +1,1549 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>jyot@terminal:~$</title>
-<style>
-  :root {
-    --bg: #000000;
-    --text: #00ff00;
-    --muted: #00aa00;
-    --accent: #00ff00;
-    --error: #ff0000;
-    --cursor: #00ff00;
-  }
-  
-  [data-theme="light"] {
-    --bg: #ffffff;
-    --text: #000000;
-    --muted: #555555;
-    --accent: #0000ff;
-    --error: #ff0000;
-    --cursor: #000000;
-  }
-
-  [data-theme="amber"] {
-    --bg: #000000;
-    --text: #ffb000;
-    --muted: #cc8800;
-    --accent: #ffb000;
-    --error: #ff0000;
-    --cursor: #ffb000;
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
-    background: var(--bg);
-    color: var(--text);
-    height: 100vh;
-    overflow: hidden;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .terminal {
-    height: 100vh;
-    overflow-y: auto;
-    padding: 20px;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .terminal::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .terminal::-webkit-scrollbar-track {
-    background: var(--bg);
-  }
-
-  .terminal::-webkit-scrollbar-thumb {
-    background: var(--muted);
-  }
-
-  .line {
-    margin: 2px 0;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-
-  .prompt-line {
-    color: var(--text);
-  }
-
-  .prompt-symbol {
-    color: var(--accent);
-  }
-
-  .error {
-    color: var(--error);
-  }
-
-  .muted {
-    color: var(--muted);
-  }
-
-  .accent {
-    color: var(--accent);
-  }
-
-  .input-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 2px 0;
-  }
-
-  .prompt {
-    color: var(--accent);
-    white-space: nowrap;
-  }
-
-  .cmd-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 14px;
-    caret-color: var(--cursor);
-  }
-
-  .cursor {
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: var(--cursor);
-    animation: blink 1s steps(2) infinite;
-  }
-
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
-
-  a.link {
-    color: var(--accent);
-    text-decoration: underline;
-  }
-
-  a.link:hover {
-    text-decoration: none;
-  }
-
-  @media (max-width: 768px) {
-    .terminal {
-      padding: 10px;
-      font-size: 12px;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>jyot@terminal:~$</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --text: #00ff00;
+      --muted: #00aa00;
+      --accent: #00ff00;
+      --error: #ff0000;
+      --cursor: #00ff00;
     }
-  }
 
-  ::selection {
-    background: var(--accent);
-    color: var(--bg);
-  }
-</style>
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --text: #000000;
+      --muted: #555555;
+      --accent: #0000ff;
+      --error: #ff0000;
+      --cursor: #000000;
+    }
+
+    [data-theme="amber"] {
+      --bg: #000000;
+      --text: #ffb000;
+      --muted: #cc8800;
+      --accent: #ffb000;
+      --error: #ff0000;
+      --cursor: #ffb000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .terminal {
+      height: 100vh;
+      overflow-y: auto;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.4;
+      width: 100%;
+
+
+      white-space: pre;
+      /* prevents automatic line wrapping */
+      overflow-x: auto;
+      /* allows horizontal scrolling if line is too long */
+
+    }
+
+    .terminal::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .terminal::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    .terminal::-webkit-scrollbar-thumb {
+      background: var(--muted);
+    }
+
+    .line {
+      margin: 2px 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .prompt-line {
+      color: var(--text);
+    }
+
+    .prompt-symbol {
+      color: var(--accent);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 2px 0;
+    }
+
+    .prompt {
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .cmd-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      caret-color: var(--cursor);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--cursor);
+      animation: blink 1s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    a.link {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    a.link:hover {
+      text-decoration: none;
+    }
+
+    /* Small laptops/tablets (1024px and below) */
+    @media (max-width: 1024px) {
+      .terminal {
+        padding: 18px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .cmd-input {
+        font-size: 13px;
+      }
+    }
+
+    /* Mobile landscape (768px and below, landscape) */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .terminal {
+        padding: 12px;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .cmd-input {
+        font-size: 12px;
+      }
+
+      .cursor {
+        width: 6px;
+        height: 12px;
+      }
+    }
+
+    /* Mobile portrait (768px and below, portrait) */
+    @media (max-width: 768px) and (orientation: portrait) {
+      .terminal {
+        padding: 15px;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .cmd-input {
+        font-size: 12px;
+      }
+
+      .cursor {
+        width: 6px;
+        height: 12px;
+      }
+    }
+
+    /* Very small phones (480px and below) */
+    @media (max-width: 480px) {
+      .terminal {
+        padding: 10px;
+        font-size: 8px;
+        line-height: 1;
+      }
+
+      .cmd-input {
+        font-size: 8;
+      }
+
+      .cursor {
+        width: 3px;
+        height: 8px;
+      }
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--bg);
+    }
+  </style>
 </head>
+
 <body>
   <div class="terminal" id="terminal"></div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-<script>
-// ============================================================================
-// FIREBASE CONFIGURATION
-// ============================================================================
-const firebaseConfig = {
-    apiKey: "AIzaSyB40512AbjkXRsLM5uGfvaRNIvzje8j1KA",
-    authDomain: "cmd-portfolio.firebaseapp.com",
-    databaseURL: "https://cmd-portfolio-default-rtdb.firebaseio.com",
-    projectId: "cmd-portfolio",
-    storageBucket: "cmd-portfolio.firebasestorage.app",
-    messagingSenderId: "896665843859",
-    appId: "1:896665843859:web:701bf5abba114d25bf7566",
-    measurementId: "G-645EB8DG31"
-  };
+  <script>
+    // ============================================================================
+    // FIREBASE CONFIGURATION
+    // ============================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyB40512AbjkXRsLM5uGfvaRNIvzje8j1KA",
+      authDomain: "cmd-portfolio.firebaseapp.com",
+      databaseURL: "https://cmd-portfolio-default-rtdb.firebaseio.com",
+      projectId: "cmd-portfolio",
+      storageBucket: "cmd-portfolio.firebasestorage.app",
+      messagingSenderId: "896665843859",
+      appId: "1:896665843859:web:701bf5abba114d25bf7566",
+      measurementId: "G-645EB8DG31"
+    };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const auth = firebase.auth();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const auth = firebase.auth();
 
-// ============================================================================
-// DOM Elements
-// ============================================================================
-const terminal = document.getElementById('terminal');
+    // ============================================================================
+    // DOM Elements
+    // ============================================================================
+    const terminal = document.getElementById('terminal');
 
-// ============================================================================
-// State Variables
-// ============================================================================
-let currentTheme = 'green';
-let platform = detectPlatform();
-let commandHistory = [];
-let historyIndex = -1;
-let currentInput = null;
-let visitorInfo = null;
-let isInitialized = false;
-let awaitingInput = false;
-let inputCallback = null;
-let userName = 'guest';
-let isAdminAuthenticated = false;
-let currentAdminUid = null;
+    // ============================================================================
+    // State Variables
+    // ============================================================================
+    let currentTheme = 'green';
+    let platform = detectPlatform();
+    let commandHistory = [];
+    let historyIndex = -1;
+    let currentInput = null;
+    let visitorInfo = null;
+    let isInitialized = false;
+    let awaitingInput = false;
+    let inputCallback = null;
+    let userName = 'guest';
+    let isAdminAuthenticated = false;
+    let currentAdminUid = null;
 
-// ============================================================================
-// Resume Data
-// ============================================================================
-const DATA = {
-  name: "JYOT KALPESH PATEL",
-  title: "Software Development Engineer",
-  location: "Vadodara, Gujarat - 390022",
-  phone: "+91 81410 48372",
-  email: "jyotkpatel1410@gmail.com",
-  linkedin: "linkedin.com/in/jyotkpatel1410",
-  github: "github.com/jyotpatel14",
-  summary: `Highly skilled Software Development Engineer with expertise in full stack development.
+    // ============================================================================
+    // Resume Data
+    // ============================================================================
+    const DATA = {
+      name: "JYOT KALPESH PATEL",
+      title: "Software Development Engineer",
+      location: "Vadodara, Gujarat - 390022",
+      phone: "+91 81410 48372",
+      email: "jyotkpatel1410@gmail.com",
+      linkedin: "linkedin.com/in/jyotkpatel1410",
+      github: "github.com/jyotpatel14",
+      summary: `Highly skilled Software Development Engineer with expertise in full stack development.
 Proficient in Java, .NET, Kotlin, ReactJS, and various databases. Proven success in 
 developing web, desktop and mobile applications, optimizing performance, and enhancing 
 user experience. Strong academic background with top university rankings. Adept at 
 leading projects and collaborating in team environments.`,
 
-  education: [
-    {institution: "Parul University (PIET - PU) — MCA", years: "2023 – Present", cgpa: "9.31/10", notes: "Secured 3rd Rank in MCA (Sem1); Scored 85% in NPTEL Exam"},
-    {institution: "CVM University — BCA", years: "2020 – 2023", cgpa: "9.88/10", notes: "Secured 2nd Rank in BCA; General Secretary of Madhyasth Samiti (2022-23)"},
-    {institution: "GSEB — HSC", years: "2019 – 2020", cgpa: "64.7%", notes: "12th Science"},
-    {institution: "GSEB — SSC", years: "2017 – 2018", cgpa: "79.7%", notes: "10th"}
-  ],
+      education: [
+        { institution: "Parul University (PIET - PU) — MCA", years: "2023 – Present", cgpa: "9.31/10", notes: "Secured 3rd Rank in MCA (Sem1); Scored 85% in NPTEL Exam" },
+        { institution: "CVM University — BCA", years: "2020 – 2023", cgpa: "9.88/10", notes: "Secured 2nd Rank in BCA; General Secretary of Madhyasth Samiti (2022-23)" },
+        { institution: "GSEB — HSC", years: "2019 – 2020", cgpa: "64.7%", notes: "12th Science" },
+        { institution: "GSEB — SSC", years: "2017 – 2018", cgpa: "79.7%", notes: "10th" }
+      ],
 
-  skills: [
-    {
-      category: "Backend",
-      items: "Java, Kotlin, C#, Python, NodeJS, ExpressJS, PHP, .NET",
-      description: "Experienced in developing scalable APIs, handling server-side logic, and integrating relational and NoSQL databases for optimized backend performance."
-    },
-    {
-      category: "Frontend",
-      items: "ReactJS, HTML, CSS, JavaScript",
-      description: "Proficient in building interactive and responsive UI components with seamless state management and performance-focused optimization."
-    },
-    {
-      category: "Frameworks & Tools",
-      items: "Tailwind, Bootstrap, ASP.NET, Visual Basic",
-      description: "Adept at using modern frameworks and UI toolkits to accelerate development, ensure responsive design, and maintain code modularity."
-    },
-    {
-      category: "Databases & Cloud",
-      items: "MS SQL, MySQL, MongoDB, GCP Firebase",
-      description: "Hands-on experience in database design, query optimization, and real-time cloud synchronization using Firebase and SQL-based systems."
-    }
-  ],
+      skills: [
+        {
+          category: "Backend",
+          items: "Java, Kotlin, C#, Python, NodeJS, ExpressJS, PHP, .NET",
+          description: "Experienced in developing scalable APIs, handling server-side logic, and integrating relational and NoSQL databases for optimized backend performance."
+        },
+        {
+          category: "Frontend",
+          items: "ReactJS, HTML, CSS, JavaScript",
+          description: "Proficient in building interactive and responsive UI components with seamless state management and performance-focused optimization."
+        },
+        {
+          category: "Frameworks & Tools",
+          items: "Tailwind, Bootstrap, ASP.NET, Visual Basic",
+          description: "Adept at using modern frameworks and UI toolkits to accelerate development, ensure responsive design, and maintain code modularity."
+        },
+        {
+          category: "Databases & Cloud",
+          items: "MS SQL, MySQL, MongoDB, GCP Firebase",
+          description: "Hands-on experience in database design, query optimization, and real-time cloud synchronization using Firebase and SQL-based systems."
+        }
+      ],
 
-  projects: [
-    {
-      name: "YOURWAY — Travel Guides & Planning App",
-      tech: "Android (Java + Kotlin), GCP Firebase, Room DB, SQLite, Figma",
-      notes: "Duration: Jul 1, 2024 - Present",
-      description: "An Android application empowering travelers to explore authentic guides, itineraries, and reviews. Includes post creation, upvoting, tipping system, and business listings."
-    },
-    {
-      name: "CHATAPP — WhatsApp-like Mobile App",
-      tech: "Android (Java + Kotlin), GCP Firebase, Room DB, SQLite",
-      notes: "Duration: Aug 1, 2024 - Present",
-      description: "A real-time chat application designed for learning modern mobile architectures. Features live messaging, profile sync, and Firebase authentication."
-    },
-    {
-      name: "MOBILE DATA TERMINAL (MDT)",
-      tech: "ASP.NET, .NET, MS SQL, Bootstrap",
-      notes: "Web app for law enforcement agencies; improved data retrieval speed and efficiency.",
-      description: "Developed a secure multi-module system (Civilian, DOJ, DA, COP) for law enforcement. Enhanced data access speed by 40% and reduced response time by 50%."
-    },
-    {
-      name: "WECHITRA — Content Posting App",
-      tech: "ASP.NET, Bootstrap, MS SQL",
-      notes: "Platform for posting photos and text; increased user engagement.",
-      description: "Created a web app enabling users to share media and text posts. Improved user engagement by 40% with responsive layouts and optimized backend queries."
-    },
-    {
-      name: "THEATRE BOOKING AND MANAGEMENT",
-      tech: "VB Script, .NET, MS SQL",
-      notes: "Digital platform for cinema hall bookings; optimized booking time and UI.",
-      description: "Engineered a digital solution for movie show scheduling and ticketing. Reduced booking time by 40% and improved overall user satisfaction."
-    }
-  ],
+      projects: [
+        {
+          name: "YOURWAY — Travel Guides & Planning App",
+          tech: "Android (Java + Kotlin), GCP Firebase, Room DB, SQLite, Figma",
+          notes: "Duration: Jul 1, 2024 - Present",
+          description: "An Android application empowering travelers to explore authentic guides, itineraries, and reviews. Includes post creation, upvoting, tipping system, and business listings."
+        },
+        {
+          name: "CHATAPP — WhatsApp-like Mobile App",
+          tech: "Android (Java + Kotlin), GCP Firebase, Room DB, SQLite",
+          notes: "Duration: Aug 1, 2024 - Present",
+          description: "A real-time chat application designed for learning modern mobile architectures. Features live messaging, profile sync, and Firebase authentication."
+        },
+        {
+          name: "MOBILE DATA TERMINAL (MDT)",
+          tech: "ASP.NET, .NET, MS SQL, Bootstrap",
+          notes: "Web app for law enforcement agencies; improved data retrieval speed and efficiency.",
+          description: "Developed a secure multi-module system (Civilian, DOJ, DA, COP) for law enforcement. Enhanced data access speed by 40% and reduced response time by 50%."
+        },
+        {
+          name: "WECHITRA — Content Posting App",
+          tech: "ASP.NET, Bootstrap, MS SQL",
+          notes: "Platform for posting photos and text; increased user engagement.",
+          description: "Created a web app enabling users to share media and text posts. Improved user engagement by 40% with responsive layouts and optimized backend queries."
+        },
+        {
+          name: "THEATRE BOOKING AND MANAGEMENT",
+          tech: "VB Script, .NET, MS SQL",
+          notes: "Digital platform for cinema hall bookings; optimized booking time and UI.",
+          description: "Engineered a digital solution for movie show scheduling and ticketing. Reduced booking time by 40% and improved overall user satisfaction."
+        }
+      ],
 
-  certifications: [
-    {
-      name: "IIT Bombay - Java Training (92.50%)",
-      description: "Completed advanced Java training focusing on OOPs, exception handling, threading, and database integration."
-    },
-    {
-      name: "IIT Kharagpur - Computer Networks & Internet Protocol (85.0%)",
-      description: "Achieved top 2% ranking in a national NPTEL course covering network layers, routing, and packet transmission."
-    },
-    {
-      name: "IBM - Exploratory Data Analysis for Machine Learning (81.0%)",
-      description: "Learned to preprocess and visualize datasets for ML pipelines using Python and Pandas."
-    },
-    {
-      name: "IBM - Introduction to AI (83.0%)",
-      description: "Studied core AI principles, including problem-solving, search algorithms, and knowledge representation."
-    },
-    {
-      name: "UC Davis - JavaScript Basics (85.0%)",
-      description: "Completed a fundamental JavaScript course covering ES6 syntax, DOM manipulation, and functional programming concepts."
-    }
-  ],
+      certifications: [
+        {
+          name: "IIT Bombay - Java Training (92.50%)",
+          description: "Completed advanced Java training focusing on OOPs, exception handling, threading, and database integration."
+        },
+        {
+          name: "IIT Kharagpur - Computer Networks & Internet Protocol (85.0%)",
+          description: "Achieved top 2% ranking in a national NPTEL course covering network layers, routing, and packet transmission."
+        },
+        {
+          name: "IBM - Exploratory Data Analysis for Machine Learning (81.0%)",
+          description: "Learned to preprocess and visualize datasets for ML pipelines using Python and Pandas."
+        },
+        {
+          name: "IBM - Introduction to AI (83.0%)",
+          description: "Studied core AI principles, including problem-solving, search algorithms, and knowledge representation."
+        },
+        {
+          name: "UC Davis - JavaScript Basics (85.0%)",
+          description: "Completed a fundamental JavaScript course covering ES6 syntax, DOM manipulation, and functional programming concepts."
+        }
+      ],
 
-  achievements: [
-    {
-      name: "Secured 2nd rank (BCA) and 3rd rank (MCA Sem1) at university level",
-      description: "Recognized for consistent academic excellence and high CGPA performance across both degrees."
-    },
-    {
-      name: "Top 2% in NPTEL Computer Networks course (85%)",
-      description: "Demonstrated strong technical understanding of networking and protocol design among thousands of participants."
-    },
-    {
-      name: "General Secretary of NVPAS (2022-2023)",
-      description: "Led a team of 25 students, coordinated major events, and maintained student-faculty engagement, enhancing institutional reputation."
-    }
-  ]
-};
+      achievements: [
+        {
+          name: "Secured 2nd rank (BCA) and 3rd rank (MCA Sem1) at university level",
+          description: "Recognized for consistent academic excellence and high CGPA performance across both degrees."
+        },
+        {
+          name: "Top 2% in NPTEL Computer Networks course (85%)",
+          description: "Demonstrated strong technical understanding of networking and protocol design among thousands of participants."
+        },
+        {
+          name: "General Secretary of NVPAS (2022-2023)",
+          description: "Led a team of 25 students, coordinated major events, and maintained student-faculty engagement, enhancing institutional reputation."
+        }
+      ]
+    };
 
-// ============================================================================
-// FIREBASE HELPER FUNCTIONS
-// ============================================================================
+    // ============================================================================
+    // FIREBASE HELPER FUNCTIONS
+    // ============================================================================
 
-// Save visitor data to Firebase (anyone can write)
-function saveVisitorToFirebase(visitor) {
-  return database.ref('visitors').push(visitor)
-    .then(() => {
-      printLine('✓ Data saved to cloud', 'muted');
-    })
-    .catch((error) => {
-      printLine('Warning: Could not save to cloud - ' + error.message, 'error');
-    });
-}
-
-// Load all visitors from Firebase (only authenticated admin can read)
-function loadVisitorsFromFirebase(callback) {
-  if (!isAdminAuthenticated || !currentAdminUid) {
-    printLine('Error: Admin authentication required', 'error');
-    callback([]);
-    return;
-  }
-
-  printLine('Loading visitor data from cloud...', 'muted');
-  
-  database.ref('visitors').once('value')
-    .then((snapshot) => {
-      const visitors = [];
-      snapshot.forEach((childSnapshot) => {
-        visitors.push({
-          id: childSnapshot.key,
-          ...childSnapshot.val()
+    // Save visitor data to Firebase (anyone can write)
+    function saveVisitorToFirebase(visitor) {
+      return database.ref('visitors').push(visitor)
+        .then(() => {
+          printLine('✓ Data saved to cloud', 'muted');
+        })
+        .catch((error) => {
+          printLine('Warning: Could not save to cloud - ' + error.message, 'error');
         });
-      });
-      callback(visitors);
-    })
-    .catch((error) => {
-      printLine('Error loading data: ' + error.message, 'error');
-      printLine('Make sure you are authenticated as admin.', 'muted');
-      callback([]);
-    });
-}
-
-// Admin Authentication with Firebase Custom Token
-function authenticateAdmin(password, callback) {
-  // const ADMIN_PASSWORD = '141002'; /* required: Set your admin password here */
-  
-  // if (password !== ADMIN_PASSWORD) {
-  //   callback(false);
-  //   return;
-  // }
-
-  printLine('Authenticating with Firebase...', 'muted');
-  
-  // Use a predefined admin email and password for Firebase Auth
-  const ADMIN_EMAIL = 'admin@cmd-portfolio.local'; /* required: Create this user in Firebase Auth */
-  const ADMIN_FIREBASE_PASSWORD = 'Admin@141002'; /* required: Set this in Firebase Auth Console */
-  
-  auth.signInWithEmailAndPassword(ADMIN_EMAIL, password)
-    .then((userCredential) => {
-      currentAdminUid = userCredential.user.uid;
-      
-      // Store admin session in Firebase
-      return database.ref('admin_sessions/' + currentAdminUid).set({
-        timestamp: Date.now(),
-        authenticated: true,
-        email: ADMIN_EMAIL
-      });
-    })
-    .then(() => {
-      callback(true);
-    })
-    .catch((error) => {
-      printLine('Firebase Authentication error: ' + error.message, 'error');
-      // printLine('Please create admin user in Firebase Console.', 'muted');
-      callback(false);
-    });
-}
-
-// Logout admin
-function logoutAdmin() {
-  if (currentAdminUid) {
-    database.ref('admin_sessions/' + currentAdminUid).remove()
-      .catch((error) => {
-        console.error('Error removing admin session:', error);
-      });
-  }
-  
-  auth.signOut()
-    .then(() => {
-      console.log('Admin signed out successfully');
-    })
-    .catch((error) => {
-      console.error('Error signing out:', error);
-    });
-  
-  currentAdminUid = null;
-  isAdminAuthenticated = false;
-}
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-// Platform Detection
-function detectPlatform() {
-  const ua = navigator.userAgent || navigator.platform;
-  if (/Win/.test(ua)) return 'windows';
-  if (/Mac|iPhone|iPad|iPod/.test(ua)) return 'mac';
-  return 'unix';
-}
-
-function getPromptSymbol() {
-  if (!isInitialized) {
-    return '>';
-  }
-  switch(platform) {
-    case 'windows':
-      return `C:\\Users\\${userName}>`;
-    case 'mac':
-      return `${userName}@MacBook-Pro:~$`;
-    default:
-      return `${userName}@terminal:~$`;
-  }
-}
-
-// Theme Toggle
-function setTheme(themeName) {
-  const themes = {
-    'green': 'dark',
-    'light': 'light',
-    'amber': 'amber'
-  };
-  
-  currentTheme = themeName;
-  document.documentElement.setAttribute('data-theme', themes[themeName] || 'dark');
-}
-
-// Print functions
-function printLine(text, className = '') {
-  const div = document.createElement('div');
-  div.className = 'line' + (className ? ' ' + className : '');
-  div.innerHTML = text;
-  terminal.appendChild(div);
-  terminal.scrollTop = terminal.scrollHeight;
-}
-
-function printPromptLine(command) {
-  const prompt = getPromptSymbol();
-  printLine(`<span class="prompt-symbol">${escapeHtml(prompt)}</span> ${escapeHtml(command)}`, 'prompt-line');
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function createInputLine() {
-  const inputDiv = document.createElement('div');
-  inputDiv.className = 'input-line';
-  
-  const prompt = document.createElement('span');
-  prompt.className = 'prompt';
-  prompt.textContent = getPromptSymbol();
-  
-  const input = document.createElement('input');
-  input.className = 'cmd-input';
-  input.autocomplete = 'off';
-  input.autocapitalize = 'off';
-  input.spellcheck = false;
-  
-  // Check if we're waiting for password input
-  if (awaitingInput && inputCallback && inputCallback.name === 'passwordCallback') {
-    input.type = 'password';
-  } else {
-    input.type = 'text';
-  }
-  
-  const cursor = document.createElement('span');
-  cursor.className = 'cursor';
-  
-  inputDiv.appendChild(prompt);
-  inputDiv.appendChild(input);
-  inputDiv.appendChild(cursor);
-  
-  terminal.appendChild(inputDiv);
-  terminal.scrollTop = terminal.scrollHeight;
-  
-  currentInput = input;
-  input.focus();
-  
-  setupInputHandlers(input);
-  
-  return input;
-}
-
-function waitForInput(callback) {
-  awaitingInput = true;
-  inputCallback = callback;
-}
-
-function isValidEmail(email) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
-}
-
-function isValidPhone(phone) {
-  const regex = /^[0-9+\-\s()]+$/;
-  return regex.test(phone) && phone.replace(/[^0-9]/g, '').length >= 10;
-}
-
-// ============================================================================
-// VISITOR INFO COLLECTION
-// ============================================================================
-
-function collectVisitorInfo() {
-  printLine('Name (required): ', 'accent');
-  
-  waitForInput((nameInput) => {
-    printLine(nameInput, 'muted');
-    
-    if (!nameInput || nameInput.trim() === '') {
-      printLine('Name is required!', 'error');
-      printLine('');
-      collectVisitorInfo();
-      return;
     }
-    
-    const visitor = { name: nameInput.trim() };
-    
-    collectEmail(visitor);
-  });
-  
-  createInputLine();
-}
 
-function collectEmail(visitor) {
-  printLine('Email (optional, press Enter to skip): ', 'accent');
-  
-  waitForInput((emailInput) => {
-    printLine(emailInput || '(skipped)', 'muted');
-    
-    if (emailInput && emailInput.trim() !== '') {
-      if (isValidEmail(emailInput.trim())) {
-        visitor.email = emailInput.trim();
-        collectPhone(visitor);
+    // Load all visitors from Firebase (only authenticated admin can read)
+    function loadVisitorsFromFirebase(callback) {
+      if (!isAdminAuthenticated || !currentAdminUid) {
+        printLine('Error: Admin authentication required', 'error');
+        callback([]);
+        return;
+      }
+
+      printLine('Loading visitor data from cloud...', 'muted');
+
+      database.ref('visitors').once('value')
+        .then((snapshot) => {
+          const visitors = [];
+          snapshot.forEach((childSnapshot) => {
+            visitors.push({
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            });
+          });
+          callback(visitors);
+        })
+        .catch((error) => {
+          printLine('Error loading data: ' + error.message, 'error');
+          printLine('Make sure you are authenticated as admin.', 'muted');
+          callback([]);
+        });
+    }
+
+    // Admin Authentication with Firebase Custom Token
+    function authenticateAdmin(password, callback) {
+      // const ADMIN_PASSWORD = '141002'; /* required: Set your admin password here */
+
+      // if (password !== ADMIN_PASSWORD) {
+      //   callback(false);
+      //   return;
+      // }
+
+      printLine('Authenticating with Firebase...', 'muted');
+
+      // Use a predefined admin email and password for Firebase Auth
+      const ADMIN_EMAIL = 'admin@cmd-portfolio.local'; /* required: Create this user in Firebase Auth */
+      const ADMIN_FIREBASE_PASSWORD = 'Admin@141002'; /* required: Set this in Firebase Auth Console */
+
+      auth.signInWithEmailAndPassword(ADMIN_EMAIL, password)
+        .then((userCredential) => {
+          currentAdminUid = userCredential.user.uid;
+
+          // Store admin session in Firebase
+          return database.ref('admin_sessions/' + currentAdminUid).set({
+            timestamp: Date.now(),
+            authenticated: true,
+            email: ADMIN_EMAIL
+          });
+        })
+        .then(() => {
+          callback(true);
+        })
+        .catch((error) => {
+          printLine('Firebase Authentication error: ' + error.message, 'error');
+          // printLine('Please create admin user in Firebase Console.', 'muted');
+          callback(false);
+        });
+    }
+
+    // Logout admin
+    function logoutAdmin() {
+      if (currentAdminUid) {
+        database.ref('admin_sessions/' + currentAdminUid).remove()
+          .catch((error) => {
+            console.error('Error removing admin session:', error);
+          });
+      }
+
+      auth.signOut()
+        .then(() => {
+          console.log('Admin signed out successfully');
+        })
+        .catch((error) => {
+          console.error('Error signing out:', error);
+        });
+
+      currentAdminUid = null;
+      isAdminAuthenticated = false;
+    }
+
+    // ============================================================================
+    // UTILITY FUNCTIONS
+    // ============================================================================
+
+    // Platform Detection
+    function detectPlatform() {
+      const ua = navigator.userAgent || navigator.platform;
+      if (/Win/.test(ua)) return 'windows';
+      if (/Mac|iPhone|iPad|iPod/.test(ua)) return 'mac';
+      return 'unix';
+    }
+
+    function getPromptSymbol() {
+      if (!isInitialized) {
+        return '>';
+      }
+      switch (platform) {
+        case 'windows':
+          return `C:\\Users\\${userName}>`;
+        case 'mac':
+          return `${userName}@MacBook-Pro:~$`;
+        default:
+          return `${userName}@terminal:~$`;
+      }
+    }
+
+    // Theme Toggle
+    function setTheme(themeName) {
+      const themes = {
+        'green': 'dark',
+        'light': 'light',
+        'amber': 'amber'
+      };
+
+      currentTheme = themeName;
+      document.documentElement.setAttribute('data-theme', themes[themeName] || 'dark');
+    }
+
+    // Print functions
+    function printLine(text, className = '') {
+      const div = document.createElement('div');
+      div.className = 'line' + (className ? ' ' + className : '');
+      div.innerHTML = text;
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function printPromptLine(command) {
+      const prompt = getPromptSymbol();
+      printLine(`<span class="prompt-symbol">${escapeHtml(prompt)}</span> ${escapeHtml(command)}`, 'prompt-line');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function createInputLine() {
+      const inputDiv = document.createElement('div');
+      inputDiv.className = 'input-line';
+
+      const prompt = document.createElement('span');
+      prompt.className = 'prompt';
+      prompt.textContent = getPromptSymbol();
+
+      const input = document.createElement('input');
+      input.className = 'cmd-input';
+      input.autocomplete = 'off';
+      input.autocapitalize = 'off';
+      input.spellcheck = false;
+
+      // Check if we're waiting for password input
+      if (awaitingInput && inputCallback && inputCallback.name === 'passwordCallback') {
+        input.type = 'password';
       } else {
-        printLine('Invalid email format!', 'error');
-        printLine('Please try again.', 'muted');
-        printLine('');
+        input.type = 'text';
+      }
+
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
+
+      inputDiv.appendChild(prompt);
+      inputDiv.appendChild(input);
+      inputDiv.appendChild(cursor);
+
+      terminal.appendChild(inputDiv);
+      terminal.scrollTop = terminal.scrollHeight;
+
+      currentInput = input;
+      input.focus();
+
+      setupInputHandlers(input);
+
+      return input;
+    }
+
+    function waitForInput(callback) {
+      awaitingInput = true;
+      inputCallback = callback;
+    }
+
+    function isValidEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    function isValidPhone(phone) {
+      const regex = /^[0-9+\-\s()]+$/;
+      return regex.test(phone) && phone.replace(/[^0-9]/g, '').length >= 10;
+    }
+
+    // ============================================================================
+    // VISITOR INFO COLLECTION
+    // ============================================================================
+
+    function collectVisitorInfo() {
+      printLine('Name (required): ', 'accent');
+
+      waitForInput((nameInput) => {
+        printLine(nameInput, 'muted');
+
+        if (!nameInput || nameInput.trim() === '') {
+          printLine('Name is required!', 'error');
+          printLine('');
+          collectVisitorInfo();
+          return;
+        }
+
+        const visitor = { name: nameInput.trim() };
+
         collectEmail(visitor);
-        return;
-      }
-    } else {
-      collectPhone(visitor);
-    }
-  });
-  
-  createInputLine();
-}
-
-function collectPhone(visitor) {
-  printLine('Phone (optional, press Enter to skip): ', 'accent');
-  
-  waitForInput((phoneInput) => {
-    printLine(phoneInput || '(skipped)', 'muted');
-    
-    if (phoneInput && phoneInput.trim() !== '') {
-      visitor.phone = phoneInput.trim();
-    }
-    
-    visitor.timestamp = new Date().toISOString();
-    visitor.timestampReadable = new Date().toString();
-    visitorInfo = visitor;
-    isInitialized = true;
-    userName = visitor.name.split(' ')[0].toLowerCase();
-    
-    printLine('');
-    printLine('Saving your information...', 'muted');
-    
-    // Save to Firebase
-    saveVisitorToFirebase(visitor)
-      .then(() => {
-        printLine('✓ Login successful!', 'accent');
-        printLine('═'.repeat(50), 'muted');
-        printLine(`Welcome, ${visitor.name}!`);
-        if (visitor.email) printLine(`Email: ${visitor.email}`);
-        if (visitor.phone) printLine(`Phone: ${visitor.phone}`);
-        printLine('');
-        printLine('You can now explore the portfolio. Type "help" for available commands.', 'muted');
-        printLine('');
-        
-        createInputLine();
       });
-  });
-  
-  createInputLine();
-}
 
-// ============================================================================
-// COMMANDS
-// ============================================================================
+      createInputLine();
+    }
 
-const COMMANDS = {
-  init: {
-    desc: "Initialize terminal and login",
-    exec: (arg) => {
-      if (isInitialized) {
-        printLine('Terminal already initialized.', 'muted');
-        printLine(`Current user: ${userName}`, 'accent');
+    function collectEmail(visitor) {
+      printLine('Email (optional, press Enter to skip): ', 'accent');
+
+      waitForInput((emailInput) => {
+        printLine(emailInput || '(skipped)', 'muted');
+
+        if (emailInput && emailInput.trim() !== '') {
+          if (isValidEmail(emailInput.trim())) {
+            visitor.email = emailInput.trim();
+            collectPhone(visitor);
+          } else {
+            printLine('Invalid email format!', 'error');
+            printLine('Please try again.', 'muted');
+            printLine('');
+            collectEmail(visitor);
+            return;
+          }
+        } else {
+          collectPhone(visitor);
+        }
+      });
+
+      createInputLine();
+    }
+
+    function collectPhone(visitor) {
+      printLine('Phone (optional, press Enter to skip): ', 'accent');
+
+      waitForInput((phoneInput) => {
+        printLine(phoneInput || '(skipped)', 'muted');
+
+        if (phoneInput && phoneInput.trim() !== '') {
+          visitor.phone = phoneInput.trim();
+        }
+
+        visitor.timestamp = new Date().toISOString();
+        visitor.timestampReadable = new Date().toString();
+        visitorInfo = visitor;
+        isInitialized = true;
+        userName = visitor.name.split(' ')[0].toLowerCase();
+
+        printLine('');
+        printLine('Saving your information...', 'muted');
+
+        // Save to Firebase
+        saveVisitorToFirebase(visitor)
+          .then(() => {
+            printLine('✓ Login successful!', 'accent');
+            printLine('═'.repeat(50), 'muted');
+            printLine(`Welcome, ${visitor.name}!`);
+            if (visitor.email) printLine(`Email: ${visitor.email}`);
+            if (visitor.phone) printLine(`Phone: ${visitor.phone}`);
+            printLine('');
+            printLine('You can now explore the portfolio. Type "help" for available commands.', 'muted');
+            printLine('');
+
+            createInputLine();
+          });
+      });
+
+      createInputLine();
+    }
+
+    // ============================================================================
+    // COMMANDS
+    // ============================================================================
+
+    const COMMANDS = {
+      init: {
+        desc: "Initialize terminal and login",
+        exec: (arg) => {
+          if (isInitialized) {
+            printLine('Terminal already initialized.', 'muted');
+            printLine(`Current user: ${userName}`, 'accent');
+            return;
+          }
+
+          if (arg && arg.toLowerCase() === 'admin') {
+            printLine('');
+            printLine('ADMIN LOGIN', 'accent');
+            printLine('═'.repeat(50), 'muted');
+            printLine('Enter admin password: ', 'accent');
+
+            const passwordCallback = function (password) {
+              printLine('*'.repeat(password.length));
+
+              authenticateAdmin(password, (success) => {
+                if (success) {
+                  isAdminAuthenticated = true;
+                  isInitialized = true;
+                  userName = 'admin';
+                  printLine('');
+                  printLine('✓ Admin authentication successful!', 'accent');
+                  printLine('✓ Firebase authenticated', 'muted');
+                  printLine('═'.repeat(50), 'muted');
+                  printLine('Type "visitors" to view all visitor data.', 'muted');
+                  printLine('Type "help" for available commands.', 'muted');
+                  printLine('');
+                  createInputLine();
+                } else {
+                  printLine('');
+                  printLine('✗ Authentication failed. Incorrect password.', 'error');
+                  printLine('');
+                  createInputLine();
+                }
+              });
+            };
+
+            waitForInput(passwordCallback);
+            createInputLine();
+            return;
+          }
+
+          printLine('');
+          printLine('TERMINAL INITIALIZATION', 'accent');
+          printLine('═'.repeat(50), 'muted');
+          printLine('Please provide your details to access the portfolio:');
+          printLine('');
+          collectVisitorInfo();
+        }
+      },
+
+      help: {
+        desc: "Display available commands",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('');
+            printLine('AVAILABLE COMMANDS (Login Required)', 'accent');
+            printLine('═'.repeat(50), 'muted');
+            printLine('  init              - Login to terminal');
+            printLine('  init admin        - Admin login');
+            printLine('  help              - Display this help message');
+            printLine('');
+            printLine('Please use "init" to login and access all features.', 'muted');
+            printLine('');
+            return;
+          }
+          printLine('');
+          printLine('AVAILABLE COMMANDS', 'accent');
+          printLine('═'.repeat(50), 'muted');
+          printLine('  help              - Display this help message');
+          if (isAdminAuthenticated) {
+            printLine('  visitors          - View all visitor data (Admin only)');
+          }
+          printLine('  about             - About me and professional summary');
+          printLine('  skills [index]    - Display technical skills (use index for details)');
+          printLine('  projects [index]  - List of projects (use index for details)');
+          printLine('  education [index] - Educational background (use index for details)');
+          printLine('  certi [index]     - Professional certifications (use index for details)');
+          printLine('  achievements [i]  - Achievements and honors (use index for details)');
+          printLine('  contact           - Contact information');
+          printLine('  resume            - Download resume PDF');
+          printLine('  social            - Social media links');
+          printLine('  visitor           - View your information');
+          printLine('  whoami            - Display current user');
+          printLine('  date              - Display current date and time');
+          printLine('  echo [text]       - Echo text back to terminal');
+          printLine('  history           - Show command history');
+          printLine('  theme [name]      - Change theme (green, amber, light)');
+          printLine('  platform [type]   - Change platform prompt (windows, mac, unix)');
+          printLine('  banner            - Display welcome banner');
+          printLine('  neofetch          - Display system information');
+          printLine('  ls                - List directory contents');
+          printLine('  pwd               - Print working directory');
+          printLine('  clear / cls       - Clear the screen');
+          printLine('  exit              - Exit terminal (closes tab)');
+          printLine('');
+          printLine('Tips:', 'muted');
+          printLine('  - Use Tab for command completion', 'muted');
+          printLine('  - Use Up/Down arrows for command history', 'muted');
+          printLine('  - Use index numbers to view detailed info (e.g., "projects 1")', 'muted');
+          printLine('');
+        }
+      },
+
+      visitors: {
+        desc: "View all visitors (Admin only)",
+        exec: () => {
+          if (!isAdminAuthenticated) {
+            printLine('Access denied. Admin privileges required.', 'error');
+            return;
+          }
+
+          loadVisitorsFromFirebase((visitors) => {
+            if (visitors.length === 0) {
+              printLine('No visitor data available.', 'muted');
+              createInputLine();
+              return;
+            }
+
+            printLine('');
+            printLine(`ALL VISITORS (Total: ${visitors.length})`, 'accent');
+            printLine('═'.repeat(80), 'muted');
+            visitors.forEach((visitor, idx) => {
+              printLine(`[${idx + 1}] ${visitor.name}`);
+              if (visitor.email) printLine(`    Email: ${visitor.email}`);
+              if (visitor.phone) printLine(`    Phone: ${visitor.phone}`);
+              printLine(`    Time: ${visitor.timestampReadable || visitor.timestamp}`);
+              printLine(`    ID: ${visitor.id}`);
+              printLine('');
+            });
+
+            createInputLine();
+          });
+        }
+      },
+
+      about: {
+        desc: "About me",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          printLine('');
+          printLine('NAME', 'accent');
+          printLine(`  ${DATA.name}`);
+          printLine('');
+          printLine('TITLE', 'accent');
+          printLine(`  ${DATA.title}`);
+          printLine('');
+          printLine('LOCATION', 'accent');
+          printLine(`  ${DATA.location}`);
+          printLine('');
+          printLine('SUMMARY', 'accent');
+          DATA.summary.split('\n').forEach(line => printLine(`  ${line}`));
+          printLine('');
+        }
+      },
+
+      skills: {
+        desc: "Technical skills",
+        exec: (arg) => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+
+          if (arg) {
+            const index = parseInt(arg) - 1;
+            if (index >= 0 && index < DATA.skills.length) {
+              const skill = DATA.skills[index];
+              printLine('');
+              printLine(`SKILL CATEGORY: ${skill.category}`, 'accent');
+              printLine('═'.repeat(50), 'muted');
+              printLine(`Technologies: ${skill.items}`);
+              printLine(`Description: ${skill.description}`);
+              printLine('');
+            } else {
+              printLine(`Invalid index. Use 1-${DATA.skills.length}`, 'error');
+            }
+          } else {
+            printLine('');
+            printLine('TECHNICAL SKILLS', 'accent');
+            printLine('═'.repeat(50), 'muted');
+            DATA.skills.forEach((s, idx) => {
+              printLine(`[${idx + 1}] ${s.category}`);
+              printLine(`   → ${s.items}`);
+            });
+            printLine('');
+            printLine('Use "skills [index]" for detailed description', 'muted');
+          }
+        }
+      },
+
+      projects: {
+        desc: "My projects",
+        exec: (arg) => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+
+          if (arg) {
+            const index = parseInt(arg) - 1;
+            if (index >= 0 && index < DATA.projects.length) {
+              const p = DATA.projects[index];
+              printLine('');
+              printLine(`PROJECT: ${p.name}`, 'accent');
+              printLine('═'.repeat(80), 'muted');
+              printLine(`Tech Stack: ${p.tech}`);
+              printLine(`Details: ${p.notes}`);
+              printLine(`Description: ${p.description}`);
+              printLine('');
+            } else {
+              printLine(`Invalid index. Use 1-${DATA.projects.length}`, 'error');
+            }
+          } else {
+            printLine('');
+            printLine('PROJECTS', 'accent');
+            printLine('═'.repeat(80), 'muted');
+            DATA.projects.forEach((p, idx) => {
+              printLine(`[${idx + 1}] ${p.name}`);
+              printLine(`   → Tech: ${p.tech}`);
+              printLine(`   → Note: ${p.notes}`);
+            });
+            printLine('');
+            printLine('Use "projects [index]" for full project details', 'muted');
+          }
+        }
+      },
+
+      education: {
+        desc: "Educational background",
+        exec: (arg) => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+
+          if (arg) {
+            const index = parseInt(arg) - 1;
+            if (index >= 0 && index < DATA.education.length) {
+              const e = DATA.education[index];
+              printLine('');
+              printLine(`INSTITUTION: ${e.institution}`, 'accent');
+              printLine('═'.repeat(80), 'muted');
+              printLine(`Years: ${e.years}`);
+              printLine(`Score: ${e.cgpa}`);
+              printLine(`Notes: ${e.notes}`);
+              printLine('');
+            } else {
+              printLine(`Invalid index. Use 1-${DATA.education.length}`, 'error');
+            }
+          } else {
+            printLine('');
+            printLine('EDUCATION', 'accent');
+            printLine('═'.repeat(80), 'muted');
+            DATA.education.forEach((e, idx) => {
+              printLine(`[${idx + 1}] ${e.institution}`);
+              printLine(`   → Years: ${e.years}`);
+              printLine(`   → Score: ${e.cgpa}`);
+              printLine(`   → Note: ${e.notes}`);
+            });
+            printLine('');
+            printLine('Use "education [index]" for detailed information', 'muted');
+          }
+        }
+      },
+
+      certi: {
+        desc: "Certifications",
+        exec: (arg) => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+
+          if (arg) {
+            const index = parseInt(arg) - 1;
+            if (index >= 0 && index < DATA.certifications.length) {
+              const c = DATA.certifications[index];
+              printLine('');
+              printLine(`CERTIFICATION: ${c.name}`, 'accent');
+              printLine('═'.repeat(80), 'muted');
+              printLine(`Description: ${c.description}`);
+              printLine('');
+            } else {
+              printLine(`Invalid index. Use 1-${DATA.certifications.length}`, 'error');
+            }
+          } else {
+            printLine('');
+            printLine('CERTIFICATIONS', 'accent');
+            printLine('═'.repeat(80), 'muted');
+            DATA.certifications.forEach((c, idx) => {
+              printLine(`[${idx + 1}] ${c.name}`);
+            });
+            printLine('');
+            printLine('Use "certi [index]" for detailed description', 'muted');
+          }
+        }
+      },
+
+      achievements: {
+        desc: "Achievements",
+        exec: (arg) => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+
+          if (arg) {
+            const index = parseInt(arg) - 1;
+            if (index >= 0 && index < DATA.achievements.length) {
+              const a = DATA.achievements[index];
+              printLine('');
+              printLine(`ACHIEVEMENT: ${a.name}`, 'accent');
+              printLine('═'.repeat(80), 'muted');
+              printLine(`Description: ${a.description}`);
+              printLine('');
+            } else {
+              printLine(`Invalid index. Use 1-${DATA.achievements.length}`, 'error');
+            }
+          } else {
+            printLine('');
+            printLine('ACHIEVEMENTS', 'accent');
+            printLine('═'.repeat(80), 'muted');
+            DATA.achievements.forEach((a, idx) => {
+              printLine(`[${idx + 1}] ${a.name}`);
+            });
+            printLine('');
+            printLine('Use "achievements [index]" for detailed description', 'muted');
+          }
+        }
+      },
+
+      contact: {
+        desc: "Contact info",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          printLine('');
+          printLine('CONTACT INFORMATION', 'accent');
+          printLine('═'.repeat(50), 'muted');
+          printLine(`  Email: ${DATA.email}`);
+          printLine(`  Phone: ${DATA.phone}`);
+          printLine(`  Location: ${DATA.location}`);
+          printLine('');
+        }
+      },
+
+      social: {
+        desc: "Social links",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          printLine('');
+          printLine('SOCIAL MEDIA', 'accent');
+          printLine('═'.repeat(50), 'muted');
+          printLine(`  LinkedIn: https://${DATA.linkedin}`);
+          printLine(`  GitHub: https://${DATA.github}`);
+          printLine('');
+        }
+      },
+
+      resume: {
+        desc: "Download resume",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          printLine('Preparing resume download...', 'muted');
+          // printLine('Note: Resume file should be placed in the same directory as this HTML file.', 'muted');
+          const a = document.createElement('a');
+          a.href = 'resume.pdf';
+          a.download = 'Jyot_K_Patel_Resume.pdf';
+          a.click();
+        }
+      },
+
+      whoami: {
+        desc: "Display current user",
+        exec: () => {
+          printLine(userName);
+        }
+      },
+
+      date: {
+        desc: "Display current date and time",
+        exec: () => {
+          printLine(new Date().toString());
+        }
+      },
+
+      echo: {
+        desc: "Echo text back",
+        exec: (arg) => {
+          printLine(arg || '');
+        }
+      },
+
+      history: {
+        desc: "Show command history",
+        exec: () => {
+          if (commandHistory.length === 0) {
+            printLine('No command history available.');
+            return;
+          }
+          printLine('');
+          commandHistory.forEach((cmd, idx) => {
+            printLine(`  ${String(idx + 1).padStart(4)} ${cmd}`);
+          });
+          printLine('');
+        }
+      },
+
+      clear: {
+        desc: "Clear screen",
+        exec: () => {
+          terminal.innerHTML = '';
+        }
+      },
+
+      cls: {
+        desc: "Clear screen (Windows)",
+        exec: () => {
+          terminal.innerHTML = '';
+        }
+      },
+
+      theme: {
+        desc: "Change theme",
+        exec: (arg) => {
+          const validThemes = ['green', 'amber', 'light'];
+          if (!arg || !validThemes.includes(arg.toLowerCase())) {
+            printLine('Available themes: green, amber, light', 'muted');
+            printLine(`Current theme: ${currentTheme}`, 'accent');
+            return;
+          }
+          setTheme(arg.toLowerCase());
+          printLine(`Theme changed to: ${arg.toLowerCase()}`, 'muted');
+        }
+      },
+
+      platform: {
+        desc: "Change platform",
+        exec: (arg) => {
+          const validPlatforms = ['windows', 'mac', 'unix'];
+          if (!arg || !validPlatforms.includes(arg.toLowerCase())) {
+            printLine('Usage: platform [windows|mac|unix]', 'error');
+            printLine(`Current platform: ${platform}`, 'accent');
+            return;
+          }
+          platform = arg.toLowerCase();
+          printLine(`Platform changed to: ${platform}`, 'muted');
+        }
+      },
+
+      banner: {
+        desc: "Display welcome banner",
+        exec: () => {
+          printBanner();
+        }
+      },
+
+      neofetch: {
+        desc: "Display system information",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          printLine('');
+          printLine('       ___           ' + userName + '@portfolio', 'accent');
+          printLine('      (.. |          ' + '-'.repeat(userName.length + 10), 'accent');
+          printLine('      (<> |          OS: Terminal Portfolio v2.0', 'accent');
+          printLine('     / __  \\         Host: Web Browser');
+          printLine('    ( /  \\ /|        Shell: custom-sh');
+          printLine('   _/\\ __)\\_)_       Resolution: ' + window.innerWidth + 'x' + window.innerHeight);
+          printLine('   \\/____\\/___\\      Theme: ' + currentTheme);
+          printLine('                     Platform: ' + platform);
+          printLine('                     User: ' + userName);
+          printLine('                     Uptime: ' + Math.floor(performance.now() / 1000) + ' seconds');
+          printLine('                     Firebase: ' + (isAdminAuthenticated ? 'Admin Auth ✓' : 'Connected'));
+          printLine('');
+        }
+      },
+
+      exit: {
+        desc: "Exit terminal",
+        exec: () => {
+          if (isInitialized) {
+            printLine('');
+            printLine('Do you want to:', 'accent');
+            printLine('  [L] Logout and return to login screen');
+            printLine('  [E] Exit and close terminal');
+            printLine('  [C] Cancel');
+            printLine('');
+            printLine('Enter your choice (L/E/C): ', 'accent');
+
+            waitForInput((choice) => {
+              const ch = choice.trim().toLowerCase();
+              printLine(choice, 'muted');
+
+              if (ch === 'l') {
+                printLine('');
+                printLine('Logging out...', 'muted');
+
+                if (isAdminAuthenticated) {
+                  logoutAdmin();
+                }
+
+                awaitingInput = false;
+                inputCallback = null;
+                isInitialized = false;
+                isAdminAuthenticated = false;
+                visitorInfo = null;
+                userName = 'guest';
+
+                terminal.innerHTML = '';
+                printBanner();
+                printLine('═'.repeat(80), 'muted');
+                printLine('');
+                printLine('  Use command "init" to login to the terminal', 'accent');
+                printLine('  Use command "init admin" for admin access', 'muted');
+                printLine('');
+                printLine('═'.repeat(80), 'muted');
+                printLine('');
+
+                createInputLine();
+              } else if (ch === 'e') {
+                printLine('');
+                printLine('Thank you for visiting my portfolio!', 'accent');
+                if (visitorInfo) {
+                  printLine(`Goodbye, ${visitorInfo.name}!`, 'accent');
+                }
+                printLine('Contact: ' + DATA.email);
+                printLine('');
+                printLine('Closing terminal...', 'muted');
+                printLine('');
+
+                if (isAdminAuthenticated) {
+                  logoutAdmin();
+                }
+
+                setTimeout(() => {
+                  window.close();
+                  setTimeout(() => {
+                    printLine('Note: Auto-close may be blocked by browser. Please close this tab manually.', 'error');
+                  }, 500);
+                }, 1500);
+              } else {
+                printLine('Exit cancelled.', 'muted');
+                printLine('');
+                createInputLine();
+              }
+            });
+
+            createInputLine();
+          } else {
+            printLine('');
+            printLine('Are you sure you want to exit? (y/n): ', 'accent');
+
+            waitForInput((choice) => {
+              const ch = choice.trim().toLowerCase();
+              printLine(choice, 'muted');
+
+              if (ch === 'y' || ch === 'yes') {
+                printLine('');
+                printLine('Closing terminal...', 'muted');
+                printLine('');
+
+                setTimeout(() => {
+                  window.close();
+                  setTimeout(() => {
+                    printLine('Note: Auto-close may be blocked by browser. Please close this tab manually.', 'error');
+                  }, 500);
+                }, 1500);
+              } else {
+                printLine('Exit cancelled.', 'muted');
+                printLine('');
+                createInputLine();
+              }
+            });
+
+            createInputLine();
+          }
+        }
+      },
+
+      ls: {
+        desc: "List directory contents",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          printLine('about.txt  skills.txt  projects.txt  education.txt  contact.txt  resume.pdf');
+        }
+      },
+
+      pwd: {
+        desc: "Print working directory",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          if (platform === 'windows') {
+            printLine(`C:\\Users\\${userName}\\Portfolio`);
+          } else {
+            printLine(`/home/${userName}/portfolio`);
+          }
+        }
+      },
+
+      visitor: {
+        desc: "View visitor information",
+        exec: () => {
+          if (!isInitialized) {
+            printLine('Please use "init" command to login first.', 'error');
+            return;
+          }
+          if (!visitorInfo) {
+            printLine('No visitor information available.', 'muted');
+            return;
+          }
+          printLine('');
+          printLine('YOUR INFORMATION', 'accent');
+          printLine('═'.repeat(50), 'muted');
+          printLine(`Name: ${visitorInfo.name}`);
+          if (visitorInfo.email) printLine(`Email: ${visitorInfo.email}`);
+          if (visitorInfo.phone) printLine(`Phone: ${visitorInfo.phone}`);
+          printLine(`Login Time: ${visitorInfo.timestampReadable || visitorInfo.timestamp}`);
+          printLine('');
+        }
+      }
+    };
+
+    // ============================================================================
+    // COMMAND HANDLER
+    // ============================================================================
+
+    function handleCommand(input) {
+      const trimmed = input.trim();
+
+      if (currentInput && currentInput.parentElement) {
+        currentInput.parentElement.remove();
+      }
+
+      if (awaitingInput && inputCallback) {
+        const callback = inputCallback;
+        awaitingInput = false;
+        inputCallback = null;
+        callback(trimmed);
         return;
       }
-      
-      if (arg && arg.toLowerCase() === 'admin') {
-        printLine('');
-        printLine('ADMIN LOGIN', 'accent');
-        printLine('═'.repeat(50), 'muted');
-        printLine('Enter admin password: ', 'accent');
-        
-        const passwordCallback = function(password) {
-          printLine('*'.repeat(password.length));
-          
-          authenticateAdmin(password, (success) => {
-            if (success) {
-              isAdminAuthenticated = true;
-              isInitialized = true;
-              userName = 'admin';
-              printLine('');
-              printLine('✓ Admin authentication successful!', 'accent');
-              printLine('✓ Firebase authenticated', 'muted');
-              printLine('═'.repeat(50), 'muted');
-              printLine('Type "visitors" to view all visitor data.', 'muted');
-              printLine('Type "help" for available commands.', 'muted');
-              printLine('');
-              createInputLine();
+
+      if (!trimmed) {
+        createInputLine();
+        return;
+      }
+
+      printPromptLine(trimmed);
+      commandHistory.push(trimmed);
+      historyIndex = commandHistory.length;
+
+      const parts = trimmed.split(/\s+/);
+      const cmd = parts[0].toLowerCase();
+      const args = parts.slice(1).join(' ');
+
+      if (COMMANDS[cmd]) {
+        try {
+          COMMANDS[cmd].exec(args);
+        } catch (e) {
+          printLine(`Error: ${e.message}`, 'error');
+        }
+      } else {
+        printLine(`Command not found: ${cmd}`, 'error');
+        printLine(`Type 'help' for a list of available commands.`, 'muted');
+      }
+
+      if (!awaitingInput) {
+        createInputLine();
+      }
+    }
+
+    // ============================================================================
+    // EVENT LISTENERS
+    // ============================================================================
+
+    function setupInputHandlers(input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleCommand(input.value);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (commandHistory.length > 0 && historyIndex > 0) {
+            historyIndex--;
+            input.value = commandHistory[historyIndex];
+          }
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            input.value = commandHistory[historyIndex];
+          } else {
+            historyIndex = commandHistory.length;
+            input.value = '';
+          }
+        } else if (e.key === 'Tab') {
+          e.preventDefault();
+          const partial = input.value.toLowerCase();
+          const matches = Object.keys(COMMANDS).filter(cmd => cmd.startsWith(partial));
+          if (matches.length === 1) {
+            input.value = matches[0];
+          } else if (matches.length > 1) {
+            printLine('');
+            printLine(matches.join('  '), 'muted');
+            input.parentElement.remove();
+            createInputLine();
+            currentInput.value = partial;
+          }
+        } else if (e.ctrlKey && e.key === 'l') {
+          e.preventDefault();
+          COMMANDS.clear.exec();
+          createInputLine();
+        } else if (e.ctrlKey && e.key === 'c') {
+          e.preventDefault();
+          input.value = '';
+          printLine('^C', 'muted');
+          input.parentElement.remove();
+
+          printLine('');
+          printLine('Are you sure you want to terminate the session? (y/n): ', 'accent');
+
+          waitForInput((choice) => {
+            const ch = choice.trim().toLowerCase();
+            printLine(choice, 'muted');
+
+            if (ch === 'y' || ch === 'yes') {
+              if (isInitialized) {
+                printLine('');
+                printLine('Session terminated. Logging out...', 'muted');
+
+                if (isAdminAuthenticated) {
+                  logoutAdmin();
+                }
+
+                awaitingInput = false;
+                inputCallback = null;
+                isInitialized = false;
+                isAdminAuthenticated = false;
+                visitorInfo = null;
+                userName = 'guest';
+
+                terminal.innerHTML = '';
+                printBanner();
+                printLine('═'.repeat(80), 'muted');
+                printLine('');
+                printLine('  Use command "init" to login to the terminal', 'accent');
+                printLine('  Use command "init admin" for admin access', 'muted');
+                printLine('');
+                printLine('═'.repeat(80), 'muted');
+                printLine('');
+
+                createInputLine();
+              } else {
+                printLine('');
+                printLine('Closing terminal...', 'muted');
+                printLine('');
+
+                setTimeout(() => {
+                  window.close();
+                  setTimeout(() => {
+                    printLine('Note: Auto-close may be blocked by browser. Please close this tab manually.', 'error');
+                  }, 500);
+                }, 1500);
+              }
             } else {
-              printLine('');
-              printLine('✗ Authentication failed. Incorrect password.', 'error');
+              printLine('Termination cancelled.', 'muted');
               printLine('');
               createInputLine();
             }
           });
-        };
-        
-        waitForInput(passwordCallback);
-        createInputLine();
-        return;
-      }
-      
-      printLine('');
-      printLine('TERMINAL INITIALIZATION', 'accent');
-      printLine('═'.repeat(50), 'muted');
-      printLine('Please provide your details to access the portfolio:');
-      printLine('');
-      collectVisitorInfo();
-    }
-  },
 
-  help: {
-    desc: "Display available commands",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('');
-        printLine('AVAILABLE COMMANDS (Login Required)', 'accent');
-        printLine('═'.repeat(50), 'muted');
-        printLine('  init              - Login to terminal');
-        printLine('  init admin        - Admin login');
-        printLine('  help              - Display this help message');
-        printLine('');
-        printLine('Please use "init" to login and access all features.', 'muted');
-        printLine('');
-        return;
-      }
-      printLine('');
-      printLine('AVAILABLE COMMANDS', 'accent');
-      printLine('═'.repeat(50), 'muted');
-      printLine('  help              - Display this help message');
-      if (isAdminAuthenticated) {
-        printLine('  visitors          - View all visitor data (Admin only)');
-      }
-      printLine('  about             - About me and professional summary');
-      printLine('  skills [index]    - Display technical skills (use index for details)');
-      printLine('  projects [index]  - List of projects (use index for details)');
-      printLine('  education [index] - Educational background (use index for details)');
-      printLine('  certi [index]     - Professional certifications (use index for details)');
-      printLine('  achievements [i]  - Achievements and honors (use index for details)');
-      printLine('  contact           - Contact information');
-      printLine('  resume            - Download resume PDF');
-      printLine('  social            - Social media links');
-      printLine('  visitor           - View your information');
-      printLine('  whoami            - Display current user');
-      printLine('  date              - Display current date and time');
-      printLine('  echo [text]       - Echo text back to terminal');
-      printLine('  history           - Show command history');
-      printLine('  theme [name]      - Change theme (green, amber, light)');
-      printLine('  platform [type]   - Change platform prompt (windows, mac, unix)');
-      printLine('  banner            - Display welcome banner');
-      printLine('  neofetch          - Display system information');
-      printLine('  ls                - List directory contents');
-      printLine('  pwd               - Print working directory');
-      printLine('  clear / cls       - Clear the screen');
-      printLine('  exit              - Exit terminal (closes tab)');
-      printLine('');
-      printLine('Tips:', 'muted');
-      printLine('  - Use Tab for command completion', 'muted');
-      printLine('  - Use Up/Down arrows for command history', 'muted');
-      printLine('  - Use index numbers to view detailed info (e.g., "projects 1")', 'muted');
-      printLine('');
-    }
-  },
-
-  visitors: {
-    desc: "View all visitors (Admin only)",
-    exec: () => {
-      if (!isAdminAuthenticated) {
-        printLine('Access denied. Admin privileges required.', 'error');
-        return;
-      }
-      
-      loadVisitorsFromFirebase((visitors) => {
-        if (visitors.length === 0) {
-          printLine('No visitor data available.', 'muted');
           createInputLine();
-          return;
         }
-        
-        printLine('');
-        printLine(`ALL VISITORS (Total: ${visitors.length})`, 'accent');
-        printLine('═'.repeat(80), 'muted');
-        visitors.forEach((visitor, idx) => {
-          printLine(`[${idx + 1}] ${visitor.name}`);
-          if (visitor.email) printLine(`    Email: ${visitor.email}`);
-          if (visitor.phone) printLine(`    Phone: ${visitor.phone}`);
-          printLine(`    Time: ${visitor.timestampReadable || visitor.timestamp}`);
-          printLine(`    ID: ${visitor.id}`);
-          printLine('');
-        });
-        
-        createInputLine();
       });
     }
-  },
 
-  about: {
-    desc: "About me",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
+    terminal.addEventListener('click', () => {
+      if (currentInput) currentInput.focus();
+    });
+
+    // ============================================================================
+    // BANNER
+    // ============================================================================
+
+    function printBanner() {
       printLine('');
-      printLine('NAME', 'accent');
-      printLine(`  ${DATA.name}`);
+      printLine('       ██╗██╗   ██╗ ██████╗ ████████╗    ██████╗  █████╗ ████████╗███████╗██╗     ', 'accent');
+      printLine('       ██║╚██╗ ██╔╝██╔═══██╗╚══██╔══╝    ██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██║     ', 'accent');
+      printLine('       ██║ ╚████╔╝ ██║   ██║   ██║       ██████╔╝███████║   ██║   █████╗  ██║     ', 'accent');
+      printLine('       ██║  ╚██╔╝  ██║   ██║   ██║       ██╔═══╝ ██╔══██║   ██║   ██╔══╝  ██║     ', 'accent');
+      printLine('  ███████║   ██║   ╚██████╔╝   ██║       ██║     ██║  ██║   ██║   ███████╗███████╗', 'accent');
+      printLine('  ╚══════╝   ╚═╝    ╚═════╝    ╚═╝       ╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝', 'accent');
       printLine('');
-      printLine('TITLE', 'accent');
-      printLine(`  ${DATA.title}`);
-      printLine('');
-      printLine('LOCATION', 'accent');
-      printLine(`  ${DATA.location}`);
-      printLine('');
-      printLine('SUMMARY', 'accent');
-      DATA.summary.split('\n').forEach(line => printLine(`  ${line}`));
-      printLine('');
-    }
-  },
-
-  skills: {
-    desc: "Technical skills",
-    exec: (arg) => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-
-      if (arg) {
-        const index = parseInt(arg) - 1;
-        if (index >= 0 && index < DATA.skills.length) {
-          const skill = DATA.skills[index];
-          printLine('');
-          printLine(`SKILL CATEGORY: ${skill.category}`, 'accent');
-          printLine('═'.repeat(50), 'muted');
-          printLine(`Technologies: ${skill.items}`);
-          printLine(`Description: ${skill.description}`);
-          printLine('');
-        } else {
-          printLine(`Invalid index. Use 1-${DATA.skills.length}`, 'error');
-        }
-      } else {
-        printLine('');
-        printLine('TECHNICAL SKILLS', 'accent');
-        printLine('═'.repeat(50), 'muted');
-        DATA.skills.forEach((s, idx) => {
-          printLine(`[${idx + 1}] ${s.category}`);
-          printLine(`   → ${s.items}`);
-        });
-        printLine('');
-        printLine('Use "skills [index]" for detailed description', 'muted');
-      }
-    }
-  },
-
-  projects: {
-    desc: "My projects",
-    exec: (arg) => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-
-      if (arg) {
-        const index = parseInt(arg) - 1;
-        if (index >= 0 && index < DATA.projects.length) {
-          const p = DATA.projects[index];
-          printLine('');
-          printLine(`PROJECT: ${p.name}`, 'accent');
-          printLine('═'.repeat(80), 'muted');
-          printLine(`Tech Stack: ${p.tech}`);
-          printLine(`Details: ${p.notes}`);
-          printLine(`Description: ${p.description}`);
-          printLine('');
-        } else {
-          printLine(`Invalid index. Use 1-${DATA.projects.length}`, 'error');
-        }
-      } else {
-        printLine('');
-        printLine('PROJECTS', 'accent');
-        printLine('═'.repeat(80), 'muted');
-        DATA.projects.forEach((p, idx) => {
-          printLine(`[${idx + 1}] ${p.name}`);
-          printLine(`   → Tech: ${p.tech}`);
-          printLine(`   → Note: ${p.notes}`);
-        });
-        printLine('');
-        printLine('Use "projects [index]" for full project details', 'muted');
-      }
-    }
-  },
-
-  education: {
-    desc: "Educational background",
-    exec: (arg) => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-
-      if (arg) {
-        const index = parseInt(arg) - 1;
-        if (index >= 0 && index < DATA.education.length) {
-          const e = DATA.education[index];
-          printLine('');
-          printLine(`INSTITUTION: ${e.institution}`, 'accent');
-          printLine('═'.repeat(80), 'muted');
-          printLine(`Years: ${e.years}`);
-          printLine(`Score: ${e.cgpa}`);
-          printLine(`Notes: ${e.notes}`);
-          printLine('');
-        } else {
-          printLine(`Invalid index. Use 1-${DATA.education.length}`, 'error');
-        }
-      } else {
-        printLine('');
-        printLine('EDUCATION', 'accent');
-        printLine('═'.repeat(80), 'muted');
-        DATA.education.forEach((e, idx) => {
-          printLine(`[${idx + 1}] ${e.institution}`);
-          printLine(`   → Years: ${e.years}`);
-          printLine(`   → Score: ${e.cgpa}`);
-          printLine(`   → Note: ${e.notes}`);
-        });
-        printLine('');
-        printLine('Use "education [index]" for detailed information', 'muted');
-      }
-    }
-  },
-
-  certi: {
-    desc: "Certifications",
-    exec: (arg) => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-
-      if (arg) {
-        const index = parseInt(arg) - 1;
-        if (index >= 0 && index < DATA.certifications.length) {
-          const c = DATA.certifications[index];
-          printLine('');
-          printLine(`CERTIFICATION: ${c.name}`, 'accent');
-          printLine('═'.repeat(80), 'muted');
-          printLine(`Description: ${c.description}`);
-          printLine('');
-        } else {
-          printLine(`Invalid index. Use 1-${DATA.certifications.length}`, 'error');
-        }
-      } else {
-        printLine('');
-        printLine('CERTIFICATIONS', 'accent');
-        printLine('═'.repeat(80), 'muted');
-        DATA.certifications.forEach((c, idx) => {
-          printLine(`[${idx + 1}] ${c.name}`);
-        });
-        printLine('');
-        printLine('Use "certi [index]" for detailed description', 'muted');
-      }
-    }
-  },
-
-  achievements: {
-    desc: "Achievements",
-    exec: (arg) => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-
-      if (arg) {
-        const index = parseInt(arg) - 1;
-        if (index >= 0 && index < DATA.achievements.length) {
-          const a = DATA.achievements[index];
-          printLine('');
-          printLine(`ACHIEVEMENT: ${a.name}`, 'accent');
-          printLine('═'.repeat(80), 'muted');
-          printLine(`Description: ${a.description}`);
-          printLine('');
-        } else {
-          printLine(`Invalid index. Use 1-${DATA.achievements.length}`, 'error');
-        }
-      } else {
-        printLine('');
-        printLine('ACHIEVEMENTS', 'accent');
-        printLine('═'.repeat(80), 'muted');
-        DATA.achievements.forEach((a, idx) => {
-          printLine(`[${idx + 1}] ${a.name}`);
-        });
-        printLine('');
-        printLine('Use "achievements [index]" for detailed description', 'muted');
-      }
-    }
-  },
-
-  contact: {
-    desc: "Contact info",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-      printLine('');
-      printLine('CONTACT INFORMATION', 'accent');
-      printLine('═'.repeat(50), 'muted');
-      printLine(`  Email: ${DATA.email}`);
-      printLine(`  Phone: ${DATA.phone}`);
-      printLine(`  Location: ${DATA.location}`);
+      printLine('  Welcome to the interactive terminal portfolio of Jyot Kalpesh Patel');
+      printLine('  Software Development Engineer | Full Stack Developer');
       printLine('');
     }
-  },
 
-  social: {
-    desc: "Social links",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-      printLine('');
-      printLine('SOCIAL MEDIA', 'accent');
-      printLine('═'.repeat(50), 'muted');
-      printLine(`  LinkedIn: https://${DATA.linkedin}`);
-      printLine(`  GitHub: https://${DATA.github}`);
-      printLine('');
-    }
-  },
+    // ============================================================================
+    // INITIALIZATION
+    // ============================================================================
 
-  resume: {
-    desc: "Download resume",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-      printLine('Preparing resume download...', 'muted');
-      // printLine('Note: Resume file should be placed in the same directory as this HTML file.', 'muted');
-      const a = document.createElement('a');
-      a.href = 'resume.pdf';
-      a.download = 'Jyot_K_Patel_Resume.pdf';
-      a.click();
-    }
-  },
-
-  whoami: {
-    desc: "Display current user",
-    exec: () => {
-      printLine(userName);
-    }
-  },
-
-  date: {
-    desc: "Display current date and time",
-    exec: () => {
-      printLine(new Date().toString());
-    }
-  },
-
-  echo: {
-    desc: "Echo text back",
-    exec: (arg) => {
-      printLine(arg || '');
-    }
-  },
-
-  history: {
-    desc: "Show command history",
-    exec: () => {
-      if (commandHistory.length === 0) {
-        printLine('No command history available.');
-        return;
-      }
-      printLine('');
-      commandHistory.forEach((cmd, idx) => {
-        printLine(`  ${String(idx + 1).padStart(4)} ${cmd}`);
-      });
-      printLine('');
-    }
-  },
-
-  clear: {
-    desc: "Clear screen",
-    exec: () => {
-      terminal.innerHTML = '';
-    }
-  },
-
-  cls: {
-    desc: "Clear screen (Windows)",
-    exec: () => {
-      terminal.innerHTML = '';
-    }
-  },
-
-  theme: {
-    desc: "Change theme",
-    exec: (arg) => {
-      const validThemes = ['green', 'amber', 'light'];
-      if (!arg || !validThemes.includes(arg.toLowerCase())) {
-        printLine('Available themes: green, amber, light', 'muted');
-        printLine(`Current theme: ${currentTheme}`, 'accent');
-        return;
-      }
-      setTheme(arg.toLowerCase());
-      printLine(`Theme changed to: ${arg.toLowerCase()}`, 'muted');
-    }
-  },
-
-  platform: {
-    desc: "Change platform",
-    exec: (arg) => {
-      const validPlatforms = ['windows', 'mac', 'unix'];
-      if (!arg || !validPlatforms.includes(arg.toLowerCase())) {
-        printLine('Usage: platform [windows|mac|unix]', 'error');
-        printLine(`Current platform: ${platform}`, 'accent');
-        return;
-      }
-      platform = arg.toLowerCase();
-      printLine(`Platform changed to: ${platform}`, 'muted');
-    }
-  },
-
-  banner: {
-    desc: "Display welcome banner",
-    exec: () => {
+    function init() {
       printBanner();
-    }
-  },
-
-  neofetch: {
-    desc: "Display system information",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
+      printLine('═'.repeat(80), 'muted');
       printLine('');
-      printLine('       ___           ' + userName + '@portfolio', 'accent');
-      printLine('      (.. |          ' + '-'.repeat(userName.length + 10), 'accent');
-      printLine('      (<> |          OS: Terminal Portfolio v2.0', 'accent');
-      printLine('     / __  \\         Host: Web Browser');
-      printLine('    ( /  \\ /|        Shell: custom-sh');
-      printLine('   _/\\ __)\\_)_       Resolution: ' + window.innerWidth + 'x' + window.innerHeight);
-      printLine('   \\/____\\/___\\      Theme: ' + currentTheme);
-      printLine('                     Platform: ' + platform);
-      printLine('                     User: ' + userName);
-      printLine('                     Uptime: ' + Math.floor(performance.now() / 1000) + ' seconds');
-      printLine('                     Firebase: ' + (isAdminAuthenticated ? 'Admin Auth ✓' : 'Connected'));
+      printLine('  Use command "init" to login to the terminal', 'accent');
+      printLine('  Use command "init admin" for admin access', 'muted');
       printLine('');
-    }
-  },
-
-  exit: {
-    desc: "Exit terminal",
-    exec: () => {
-      if (isInitialized) {
-        printLine('');
-        printLine('Do you want to:', 'accent');
-        printLine('  [L] Logout and return to login screen');
-        printLine('  [E] Exit and close terminal');
-        printLine('  [C] Cancel');
-        printLine('');
-        printLine('Enter your choice (L/E/C): ', 'accent');
-        
-        waitForInput((choice) => {
-          const ch = choice.trim().toLowerCase();
-          printLine(choice, 'muted');
-          
-          if (ch === 'l') {
-            printLine('');
-            printLine('Logging out...', 'muted');
-            
-            if (isAdminAuthenticated) {
-              logoutAdmin();
-            }
-            
-            awaitingInput = false;
-            inputCallback = null;
-            isInitialized = false;
-            isAdminAuthenticated = false;
-            visitorInfo = null;
-            userName = 'guest';
-            
-            terminal.innerHTML = '';
-            printBanner();
-            printLine('═'.repeat(80), 'muted');
-            printLine('');
-            printLine('  Use command "init" to login to the terminal', 'accent');
-            printLine('  Use command "init admin" for admin access', 'muted');
-            printLine('');
-            printLine('═'.repeat(80), 'muted');
-            printLine('');
-            
-            createInputLine();
-          } else if (ch === 'e') {
-            printLine('');
-            printLine('Thank you for visiting my portfolio!', 'accent');
-            if (visitorInfo) {
-              printLine(`Goodbye, ${visitorInfo.name}!`, 'accent');
-            }
-            printLine('Contact: ' + DATA.email);
-            printLine('');
-            printLine('Closing terminal...', 'muted');
-            printLine('');
-            
-            if (isAdminAuthenticated) {
-              logoutAdmin();
-            }
-            
-            setTimeout(() => {
-              window.close();
-              setTimeout(() => {
-                printLine('Note: Auto-close may be blocked by browser. Please close this tab manually.', 'error');
-              }, 500);
-            }, 1500);
-          } else {
-            printLine('Exit cancelled.', 'muted');
-            printLine('');
-            createInputLine();
-          }
-        });
-        
-        createInputLine();
-      } else {
-        printLine('');
-        printLine('Are you sure you want to exit? (y/n): ', 'accent');
-        
-        waitForInput((choice) => {
-          const ch = choice.trim().toLowerCase();
-          printLine(choice, 'muted');
-          
-          if (ch === 'y' || ch === 'yes') {
-            printLine('');
-            printLine('Closing terminal...', 'muted');
-            printLine('');
-            
-            setTimeout(() => {
-              window.close();
-              setTimeout(() => {
-                printLine('Note: Auto-close may be blocked by browser. Please close this tab manually.', 'error');
-              }, 500);
-            }, 1500);
-          } else {
-            printLine('Exit cancelled.', 'muted');
-            printLine('');
-            createInputLine();
-          }
-        });
-        
-        createInputLine();
-      }
-    }
-  },
-
-  ls: {
-    desc: "List directory contents",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-      printLine('about.txt  skills.txt  projects.txt  education.txt  contact.txt  resume.pdf');
-    }
-  },
-
-  pwd: {
-    desc: "Print working directory",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-      if (platform === 'windows') {
-        printLine(`C:\\Users\\${userName}\\Portfolio`);
-      } else {
-        printLine(`/home/${userName}/portfolio`);
-      }
-    }
-  },
-
-  visitor: {
-    desc: "View visitor information",
-    exec: () => {
-      if (!isInitialized) {
-        printLine('Please use "init" command to login first.', 'error');
-        return;
-      }
-      if (!visitorInfo) {
-        printLine('No visitor information available.', 'muted');
-        return;
-      }
+      printLine('═'.repeat(80), 'muted');
       printLine('');
-      printLine('YOUR INFORMATION', 'accent');
-      printLine('═'.repeat(50), 'muted');
-      printLine(`Name: ${visitorInfo.name}`);
-      if (visitorInfo.email) printLine(`Email: ${visitorInfo.email}`);
-      if (visitorInfo.phone) printLine(`Phone: ${visitorInfo.phone}`);
-      printLine(`Login Time: ${visitorInfo.timestampReadable || visitorInfo.timestamp}`);
-      printLine('');
-    }
-  }
-};
 
-// ============================================================================
-// COMMAND HANDLER
-// ============================================================================
-
-function handleCommand(input) {
-  const trimmed = input.trim();
-  
-  if (currentInput && currentInput.parentElement) {
-    currentInput.parentElement.remove();
-  }
-  
-  if (awaitingInput && inputCallback) {
-    const callback = inputCallback;
-    awaitingInput = false;
-    inputCallback = null;
-    callback(trimmed);
-    return;
-  }
-  
-  if (!trimmed) {
-    createInputLine();
-    return;
-  }
-
-  printPromptLine(trimmed);
-  commandHistory.push(trimmed);
-  historyIndex = commandHistory.length;
-
-  const parts = trimmed.split(/\s+/);
-  const cmd = parts[0].toLowerCase();
-  const args = parts.slice(1).join(' ');
-
-  if (COMMANDS[cmd]) {
-    try {
-      COMMANDS[cmd].exec(args);
-    } catch (e) {
-      printLine(`Error: ${e.message}`, 'error');
-    }
-  } else {
-    printLine(`Command not found: ${cmd}`, 'error');
-    printLine(`Type 'help' for a list of available commands.`, 'muted');
-  }
-  
-  if (!awaitingInput) {
-    createInputLine();
-  }
-}
-
-// ============================================================================
-// EVENT LISTENERS
-// ============================================================================
-
-function setupInputHandlers(input) {
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleCommand(input.value);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (commandHistory.length > 0 && historyIndex > 0) {
-        historyIndex--;
-        input.value = commandHistory[historyIndex];
-      }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (historyIndex < commandHistory.length - 1) {
-        historyIndex++;
-        input.value = commandHistory[historyIndex];
-      } else {
-        historyIndex = commandHistory.length;
-        input.value = '';
-      }
-    } else if (e.key === 'Tab') {
-      e.preventDefault();
-      const partial = input.value.toLowerCase();
-      const matches = Object.keys(COMMANDS).filter(cmd => cmd.startsWith(partial));
-      if (matches.length === 1) {
-        input.value = matches[0];
-      } else if (matches.length > 1) {
-        printLine('');
-        printLine(matches.join('  '), 'muted');
-        input.parentElement.remove();
-        createInputLine();
-        currentInput.value = partial;
-      }
-    } else if (e.ctrlKey && e.key === 'l') {
-      e.preventDefault();
-      COMMANDS.clear.exec();
-      createInputLine();
-    } else if (e.ctrlKey && e.key === 'c') {
-      e.preventDefault();
-      input.value = '';
-      printLine('^C', 'muted');
-      input.parentElement.remove();
-      
-      printLine('');
-      printLine('Are you sure you want to terminate the session? (y/n): ', 'accent');
-      
-      waitForInput((choice) => {
-        const ch = choice.trim().toLowerCase();
-        printLine(choice, 'muted');
-        
-        if (ch === 'y' || ch === 'yes') {
-          if (isInitialized) {
-            printLine('');
-            printLine('Session terminated. Logging out...', 'muted');
-            
-            if (isAdminAuthenticated) {
-              logoutAdmin();
-            }
-            
-            awaitingInput = false;
-            inputCallback = null;
-            isInitialized = false;
-            isAdminAuthenticated = false;
-            visitorInfo = null;
-            userName = 'guest';
-            
-            terminal.innerHTML = '';
-            printBanner();
-            printLine('═'.repeat(80), 'muted');
-            printLine('');
-            printLine('  Use command "init" to login to the terminal', 'accent');
-            printLine('  Use command "init admin" for admin access', 'muted');
-            printLine('');
-            printLine('═'.repeat(80), 'muted');
-            printLine('');
-            
-            createInputLine();
-          } else {
-            printLine('');
-            printLine('Closing terminal...', 'muted');
-            printLine('');
-            
-            setTimeout(() => {
-              window.close();
-              setTimeout(() => {
-                printLine('Note: Auto-close may be blocked by browser. Please close this tab manually.', 'error');
-              }, 500);
-            }, 1500);
-          }
+      // Check Firebase connection
+      database.ref('.info/connected').on('value', (snapshot) => {
+        if (snapshot.val() === true) {
+          console.log('✓ Firebase connected successfully');
         } else {
-          printLine('Termination cancelled.', 'muted');
-          printLine('');
-          createInputLine();
+          console.log('✗ Firebase disconnected');
         }
       });
-      
+
       createInputLine();
     }
-  });
-}
 
-terminal.addEventListener('click', () => {
-  if (currentInput) currentInput.focus();
-});
-
-// ============================================================================
-// BANNER
-// ============================================================================
-
-function printBanner() {
-  printLine('');
-  printLine('      ██╗██╗   ██╗ ██████╗ ████████╗    ██████╗  █████╗ ████████╗███████╗██╗     ', 'accent');
-  printLine('      ██║╚██╗ ██╔╝██╔═══██╗╚══██╔══╝    ██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██║     ', 'accent');
-  printLine('      ██║ ╚████╔╝ ██║   ██║   ██║       ██████╔╝███████║   ██║   █████╗  ██║     ', 'accent');
-  printLine('      ██║  ╚██╔╝  ██║   ██║   ██║       ██╔═══╝ ██╔══██║   ██║   ██╔══╝  ██║     ', 'accent');
-  printLine('  ██████║   ██║   ╚██████╔╝   ██║       ██║     ██║  ██║   ██║   ███████╗███████╗', 'accent');
-  printLine('  ╚═════╝   ╚═╝    ╚═════╝    ╚═╝       ╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝', 'accent');
-  printLine('');
-  printLine('  Welcome to the interactive terminal portfolio of Jyot Kalpesh Patel');
-  printLine('  Software Development Engineer | Full Stack Developer');
-  printLine('');
-}
-
-// ============================================================================
-// INITIALIZATION
-// ============================================================================
-
-function init() {
-  printBanner();
-  printLine('═'.repeat(80), 'muted');
-  printLine('');
-  printLine('  Use command "init" to login to the terminal', 'accent');
-  printLine('  Use command "init admin" for admin access', 'muted');
-  printLine('');
-  printLine('═'.repeat(80), 'muted');
-  printLine('');
-  
-  // Check Firebase connection
-  database.ref('.info/connected').on('value', (snapshot) => {
-    if (snapshot.val() === true) {
-      console.log('✓ Firebase connected successfully');
-    } else {
-      console.log('✗ Firebase disconnected');
-    }
-  });
-  
-  createInputLine();
-}
-
-init();
-</script>
+    init();
+  </script>
 </body>
 
 </html>
