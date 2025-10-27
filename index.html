@@ -229,6 +229,33 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+  <!-- Restrict inspect -->
+<script>
+  document.onkeydown = function(e) {
+    if (e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === "I") ||
+        (e.ctrlKey && e.shiftKey && e.key === "J") ||
+        (e.ctrlKey && e.key === "U")) {
+      e.preventDefault();
+      return false;
+    }
+  };
+</script>
+<script>
+  setInterval(() => {
+    const threshold = 160;
+    if (window.outerWidth - window.innerWidth > threshold ||
+        window.outerHeight - window.innerHeight > threshold) {
+      alert("Please close Developer Tools to continue.");
+      window.location.reload();
+    }
+  }, 1000);
+</script>
+
 
   <script>
     // ============================================================================
@@ -1545,5 +1572,6 @@ leading projects and collaborating in team environments.`,
     init();
   </script>
 </body>
+
 
 </html>
